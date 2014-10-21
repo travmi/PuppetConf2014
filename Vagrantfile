@@ -36,7 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     # Install puppet master
     master.vm.provision "shell",
-      inline: "sudo dpkg -i /vagrant/puppetlabs-release-wheezy.deb; sudo apt-get update; sudo apt-get -y install puppetmaster-passenger"
+      inline: "sudo rpm -Uvh /vagrant/puppetlabs-release-el-6.noarch.rpm; sudo yum update; sudo yum install puppetmaster-passenger -y"
     # Set up autosigning for agents
     master.vm.provision "shell",
       inline: 'echo -e "rsyslog.local.lan\nelk.local.lan\nclient.local.lan\n" >> /etc/puppet/autosign.conf'
