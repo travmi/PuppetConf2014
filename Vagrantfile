@@ -18,8 +18,8 @@ EOF
 # Install packages I like
 $packages = <<EOF
 echo "Installing extra packages"
-apt-get update
-apt-get -y install vim strace lsof tcpdump git htop
+yum update -y
+yum install vim strace lsof tcpdump git htop rsync wget -y
 EOF
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
@@ -28,7 +28,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
  config.vm.define "master" do |master|
-    master.vm.box = "puppetlabs/debian-7.4-64-puppet"
+    master.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
     master.vm.hostname = "puppet.local.lan"
     master.vm.network "private_network", ip: "192.168.10.10"
     master.vm.provider "virtualbox" do |vb|
@@ -46,7 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "rsyslog" do |rsyslog|
-    rsyslog.vm.box = "puppetlabs/debian-7.4-64-puppet"
+    rsyslog.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
     rsyslog.vm.hostname = "rsyslog.local.lan"
     rsyslog.vm.network "private_network", ip: "192.168.10.11"
     rsyslog.vm.provider "virtualbox" do |vb|
@@ -55,7 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "elk" do |elk|
-    elk.vm.box = "puppetlabs/debian-7.4-64-puppet"
+    elk.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
     elk.vm.hostname = "elk.local.lan"
     elk.vm.network "private_network", ip: "192.168.10.12"
     elk.vm.network "forwarded_port", guest: 9200, host: 9200
@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "client" do |client|
-    client.vm.box = "puppetlabs/debian-7.4-64-puppet"
+    client.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
     client.vm.hostname = "client.local.lan"
     client.vm.network "private_network", ip: "192.168.10.13"
     client.vm.provider "virtualbox" do |vb|
