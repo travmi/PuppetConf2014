@@ -28,7 +28,7 @@ node rsyslog {
   }
 
   class { 'logstash':
-    package_url   => 'https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb',
+    package_url   => 'https://download.elasticsearch.org/logstash/logstash/packages/centos/logstash-1.4.2-1_2c0f5a1.noarch.rpm',
     java_install  => true,
     init_defaults => $config_hash
   }
@@ -102,7 +102,7 @@ node elk {
 
   class { 'elasticsearch':
     java_install => true,
-    package_url  => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb',
+    package_url  => 'https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.0.noarch.rpm',
     before       => Class['Logstash']
   }
 
@@ -125,7 +125,7 @@ node elk {
   }
 
   class { 'logstash':
-    package_url   => 'https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb',
+    package_url   => 'https://download.elasticsearch.org/logstash/logstash/packages/centos/logstash-1.4.2-1_2c0f5a1.noarch.rpm',
     init_defaults => $config_hash,
     subscribe     => Exec["Get geoip database"]
   }
