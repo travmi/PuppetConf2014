@@ -28,7 +28,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
  config.vm.define "master" do |master|
-    master.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
+    master.vm.box = "chef/centos-6.6"
     master.vm.hostname = "puppet.local.lan"
     master.vm.network "private_network", ip: "192.168.10.10"
     master.vm.provider "virtualbox" do |vb|
@@ -36,7 +36,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
     # Install puppet master
     master.vm.provision "shell",
-      inline: "sudo rpm -Uvh /vagrant/puppetlabs-release-el-6.noarch.rpm; sudo yum update; sudo yum install puppetmaster-passenger -y"
+      inline: "sudo rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm; sudo yum update -y; sudo yum install puppet-server -y"
     # Set up autosigning for agents
     master.vm.provision "shell",
       inline: 'echo -e "rsyslog.local.lan\nelk.local.lan\nclient.local.lan\n" >> /etc/puppet/autosign.conf'
@@ -46,16 +46,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "rsyslog" do |rsyslog|
-    rsyslog.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
+    rsyslog.vm.box = "chef/centos-6.6"
     rsyslog.vm.hostname = "rsyslog.local.lan"
     rsyslog.vm.network "private_network", ip: "192.168.10.11"
     rsyslog.vm.provider "virtualbox" do |vb|
      vb.customize ["modifyvm", :id, "--memory", "512"]
-    end
+    end 
   end
 
   config.vm.define "elk" do |elk|
-    elk.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
+    elk.vm.box = "chef/centos-6.6"
     elk.vm.hostname = "elk.local.lan"
     elk.vm.network "private_network", ip: "192.168.10.12"
     elk.vm.network "forwarded_port", guest: 9200, host: 9200
@@ -66,7 +66,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.define "client" do |client|
-    client.vm.box = "puppetlabs/centos-65-x64-vbox4210-nocm"
+    client.vm.box = "chef/centos-6.6"
     client.vm.hostname = "client.local.lan"
     client.vm.network "private_network", ip: "192.168.10.13"
     client.vm.provider "virtualbox" do |vb|
@@ -87,7 +87,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   clients.each do |i|
     config.vm.define "#{i}" do |node|
         node.vm.provision "shell",
-            inline: "puppet agent -t"
+          inline: "curl -k https://puppet.local.lan:8140/packages/current/install.bash | sudo bash"
+        node.vm.provision "shell",
+          inline: "puppet agent -t"
     end
   end
 
